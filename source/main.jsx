@@ -8,5 +8,8 @@ window.addEventListener("load", () => {
 
 function App() {
   // Your app code goes here...
-  return <p>(This JSX code becomes the contents of your component)</p>;
+  return <p>(test)</p>;
+
+  return;
+  <div id="gridContainer"></div>;
 }
