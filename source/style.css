@@ -13,6 +13,24 @@ body {
   height: 100vh;
 }
 
+.healthBox {
+  width: 40%;
+  max-width: 520px;
+  height: 16px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #fff;
+  margin: 16px auto 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.healthFill {
+  height: 100%;
+  background: red;
+  transition: width 0.05s linear;
+}
+
 #characterPlace {
   display: block;
   width: 100vw;
@@ -23,7 +41,6 @@ body {
 #characterImg {
   display: block;
   margin: auto;
-  /* padding-top: 10vh; */
   width: 30%;
   height: auto;
   max-width: 500px;
@@ -79,3 +96,7 @@ body {
   height: 100%;
   margin: auto;
 }
+
+/* #gridContainer img.dragging {
+  opacity: 0;
+} */
