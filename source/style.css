@@ -2,7 +2,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(222, 164, 164);
 }
 
 #app {
@@ -11,9 +13,19 @@ body {
   justify-content: space-between;
   width: 100vw;
   height: 100vh;
+  overflow-y: auto;
 }
 
-.healthBox {
+h1 {
+  text-align: center;
+}
+
+p {
+  text-align: center;
+  font-size: 24px;
+}
+
+.healthBar {
   width: 40%;
   max-width: 520px;
   height: 16px;
@@ -36,6 +48,7 @@ body {
   width: 100vw;
   height: auto;
   margin: auto;
+  position: relative;
 }
 
 #characterImg {
@@ -49,11 +62,15 @@ body {
 #gridContainer {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  width: 100%;
   padding: 10px;
+  box-sizing: border-box;
+}
+
+#gridContainer img {
   width: 100%;
   height: auto;
-  position: static;
-  bottom: auto;
+  max-width: 100%;
 }
 
 #item1 {
@@ -96,7 +113,3 @@ body {
   height: 100%;
   margin: auto;
 }
-
-/* #gridContainer img.dragging {
-  opacity: 0;
-} */

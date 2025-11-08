@@ -2,105 +2,149 @@ import React, { useState, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import Draggable from "react-draggable";
 
-function eventLogger(e, data) {
-  console.log("Event:", e.type, "Data:", data);
-}
+window.addEventListener("load", () => {
+  const root = createRoot(document.getElementById("root"));
+  root.render(<App />);
+});
 
-function App() {
-  const nodeRef = useRef(null);
+function HealthBar() {
+  const [pct, setPct] = useState(100);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setPct((p) => {
+        const next = Math.max(0, p - 0.2);
+        if (next === 0 && p !== 0) console.log("short circuit!");
+        return next;
+      });
+    }, 50);
+    return () => clearInterval(id);
+  }, []);
 
   return (
-    <div id="app">
-      <Draggable
-        nodeRef={nodeRef}
-        axis="x"
-        handle=".handle"
-        defaultPosition={{ x: 0, y: 0 }}
-        position={null}
-        grid={[25, 25]}
-        scale={1}
-        onStart={eventLogger}
-        onDrag={eventLogger}
-        onStop={eventLogger}
-      >
-        <div ref={nodeRef}>
-          <div className="handle">Drag from here</div>
-          <div>This readme is really dragging on...</div>
-        </div>
-      </Draggable>
+    <div className="healthBar">
+      <div className="healthFill" style={{ width: pct + "%" }} />
     </div>
   );
 }
 
-const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+function App() {
+  const r1 = useRef(null);
+  const r2 = useRef(null);
+  const r3 = useRef(null);
+  const r4 = useRef(null);
+  const r5 = useRef(null);
+  const r6 = useRef(null);
 
-// zz
+  const [pos, setPos] = useState([
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+  ]);
 
-// window.addEventListener("load", () => {
-//   const root = createRoot(document.getElementById("root"));
-//   root.render(<App />);
-// });
+  const onDrag = (i) => (_e, data) => {
+    setPos((p) => {
+      const cp = p.slice();
+      cp[i] = { x: data.x, y: data.y };
+      return cp;
+    });
+  };
 
-// function HealthBar() {
-//   const [pct, setPct] = useState(100);
+  const onStop = (i) => () => {
+    setPos((p) => {
+      const cp = p.slice();
+      cp[i] = { x: 0, y: 0 };
+      return cp;
+    });
+  };
 
-//   useEffect(() => {
-//     const id = setInterval(() => {
-//       setPct((p) => {
-//         const next = Math.max(0, p - 0.2);
-//         if (next === 0 && p !== 0) {
-//           console.log("short circuit!");
-//         }
-//         return next;
-//       });
-//     }, 50);
-//     return () => clearInterval(id);
-//   }, []);
+  return (
+    <div id="app">
+      <div id="characterPlace">
+        <p>LIFE</p>
+        <HealthBar />
+        <img
+          id="characterImg"
+          src="img/character.png"
+          alt="character"
+          draggable="false"
+        />
+      </div>
 
-//   return (
-//     <div className="healthBox">
-//       <div className="healthFill" style={{ width: pct + "%" }} />
-//     </div>
-//   );
-// }
+      <div id="gridContainer">
+        <Draggable
+          nodeRef={r1}
+          position={pos[0]}
+          onDrag={onDrag(0)}
+          onStop={onStop(0)}
+        >
+          <div id="item1" ref={r1}>
+            <img src="img/cat.png" alt="cat" draggable="false" />
+          </div>
+        </Draggable>
 
-// function App() {
-//   const items = [
-//     "cat.png",
-//     "energydrink.png",
-//     "food.png",
-//     "friends.png",
-//     "sleep.png",
-//     "shower.png",
-//   ];
+        <Draggable
+          nodeRef={r2}
+          position={pos[1]}
+          onDrag={onDrag(1)}
+          onStop={onStop(1)}
+        >
+          <div id="item2" ref={r2}>
+            <img
+              src="img/energydrink.png"
+              alt="energydrink"
+              draggable="false"
+            />
+          </div>
+        </Draggable>
 
-//   return (
-//     <div id="app">
-//       <div id="characterPlace">
-//         <p>LIFE</p>
-//         <HealthBar />
-//         <img
-//           id="characterImg"
-//           src="img/character.png"
-//           alt="character"
-//           draggable="false"
-//         />
-//       </div>
+        <Draggable
+          nodeRef={r3}
+          position={pos[2]}
+          onDrag={onDrag(2)}
+          onStop={onStop(2)}
+        >
+          <div id="item3" ref={r3}>
+            <img src="img/food.png" alt="food" draggable="false" />
+          </div>
+        </Draggable>
 
-//       <div id="gridContainer">
-//         <img id="item1" src="img/cat.png" alt="cat" draggable="false" />
-//         <img
-//           id="item2"
-//           src="img/energydrink.png"
-//           alt="energydrink"
-//           draggable="false"
-//         />
-//         <img id="item3" src="img/food.png" alt="food" draggable="false" />
-//         <img id="item4" src="img/friends.png" alt="friends" draggable="false" />
-//         <img id="item5" src="img/sleep.png" alt="sleep" draggable="false" />
-//         <img id="item6" src="img/shower.png" alt="shower" draggable="false" />
-//       </div>
-//     </div>
-//   );
-// }
+        <Draggable
+          nodeRef={r4}
+          position={pos[3]}
+          onDrag={onDrag(3)}
+          onStop={onStop(3)}
+        >
+          <div id="item4" ref={r4}>
+            <img src="img/friends.png" alt="friends" draggable="false" />
+          </div>
+        </Draggable>
+
+        <Draggable
+          nodeRef={r5}
+          position={pos[4]}
+          onDrag={onDrag(4)}
+          onStop={onStop(4)}
+        >
+          <div id="item5" ref={r5}>
+            <img src="img/sleep.png" alt="sleep" draggable="false" />
+          </div>
+        </Draggable>
+
+        <Draggable
+          nodeRef={r6}
+          position={pos[5]}
+          onDrag={onDrag(5)}
+          onStop={onStop(5)}
+        >
+          <div id="item6" ref={r6}>
+            <img src="img/shower.png" alt="shower" draggable="false" />
+          </div>
+        </Draggable>
+      </div>
+    </div>
+  );
+}
