@@ -1,8 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Coral+Pixels&family=Doto:wght@100..900&family=Foldit:wght@100..900&family=Freckle+Face&family=Gamja+Flower&family=Handjet:wght@100..900&family=Jersey+10&family=Love+Ya+Like+A+Sister&family=Micro+5+Charted&family=Moo+Lah+Lah&family=Rubik+Pixels&family=Schoolbell&family=Silkscreen:wght@400;700&family=Story+Script&family=Wallpoet&display=swap");
+
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: rgb(222, 164, 164);
+  background-color: #9963d8;
+  color: #3c10b5;
 }
 
 #app {
@@ -14,19 +17,30 @@ body {
 
 h1 {
   text-align: center;
+  font-family: "Silkscreen";
+  font-size: 35px;
 }
 
 p {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 25px;
+  margin-bottom: 0px;
+  font-family: "Jersey 10";
+}
+
+#life {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 0px;
+  font-family: "Jersey 10";
+  color: #3c10b5;
 }
 
 .healthBar {
   width: 40%;
   max-width: 520px;
   height: 16px;
-  border: 2px solid #333;
+  border: 2px solid #3c10b5;
   border-radius: 8px;
   background: #fff;
   margin: 16px auto 8px;
@@ -36,8 +50,7 @@ p {
 
 .healthFill {
   height: 100%;
-  background: red;
-  transition: width 0.05s linear;
+  background: #eb23ca;
 }
 
 #characterPlace {
@@ -64,10 +77,15 @@ p {
   box-sizing: border-box;
 }
 
+#gridContainer > .react-draggable {
+  display: grid;
+  place-items: center;
+}
+
 #gridContainer img {
-  width: 100%;
+  display: block;
+  max-width: 80%;
   height: auto;
-  max-width: 100%;
 }
 
 #item1 {

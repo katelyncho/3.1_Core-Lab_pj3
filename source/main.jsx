@@ -8,57 +8,73 @@ window.addEventListener("load", () => {
 });
 
 function HealthBar({
-  start = 0.1,
-  accelStep = 0.05,
-  accelInterval = 15000,
-  tick = 50,
+  start = 0.2,
+  accelStep = 0.8,
+  accelInterval = 3000,
+  tick = 40,
   onReady,
   onZero,
 }) {
-  const [pct, setPct] = useState(100);
-  const rateRef = useRef(start);
-  const firedRef = useRef(false);
-
-  useEffect(() => {
-    if (onReady)
-      onReady((amt) =>
-        setPct((p) => Math.max(0, Math.min(100, p + (amt || 0))))
-      );
+  const bar = React.useRef(null),
+    pctRef = React.useRef(1),
+    fired = React.useRef(false);
+  React.useEffect(() => {
+    if (!onReady) return;
+    onReady((amt = 0) => {
+      const v = Math.max(0, Math.min(1, pctRef.current + amt / 100));
+      pctRef.current = v;
+      if (bar.current) bar.current.style.transform = `scaleX(${v})`;
+    });
   }, [onReady]);
 
-  useEffect(() => {
-    const speedTimer = setInterval(() => {
-      rateRef.current += accelStep;
-    }, accelInterval);
-
-    const drainTimer = setInterval(() => {
-      setPct((p) => {
-        const next = Math.max(0, p - rateRef.current);
-        if (next === 0 && p !== 0) {
-          console.log("short circuit!");
-          if (!firedRef.current && onZero) {
-            firedRef.current = true;
-            onZero();
-          }
+  React.useEffect(() => {
+    let raf,
+      last = performance.now(),
+      t0 = last,
+      step = 0;
+    let rate = (start * (1000 / tick)) / 100;
+    const loop = (now) => {
+      const dt = (now - last) / 1000;
+      const wantStep = Math.floor((now - t0) / accelInterval);
+      while (step < wantStep) {
+        rate *= 1 + accelStep;
+        step++;
+      }
+      const prev = pctRef.current,
+        next = Math.max(0, prev - rate * dt);
+      if (next !== prev) {
+        pctRef.current = next;
+        if (bar.current) bar.current.style.transform = `scaleX(${next})`;
+        if (next === 0 && !fired.current && onZero) {
+          fired.current = true;
+          onZero();
         }
-        return next;
-      });
-    }, tick);
-
-    return () => {
-      clearInterval(speedTimer);
-      clearInterval(drainTimer);
+      }
+      last = now;
+      raf = requestAnimationFrame(loop);
     };
-  }, [accelStep, accelInterval, tick, onZero]);
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [start, accelStep, accelInterval, tick, onZero]);
 
   return (
     <div className="healthBar">
-      <div className="healthFill" style={{ width: pct + "%" }} />
+      <div
+        ref={bar}
+        className="healthFill"
+        style={{
+          transformOrigin: "left",
+          transform: "scaleX(1)",
+          willChange: "transform",
+        }}
+      />
     </div>
   );
 }
 
 function App() {
+  const [score, setScore] = useState(0);
+
   const r1 = useRef(null),
     r2 = useRef(null),
     r3 = useRef(null),
@@ -88,10 +104,24 @@ function App() {
     return () => clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    const el = document.getElementById("score");
+    const id = setInterval(() => {
+      setScore((s) => {
+        const ns = s + 10;
+        if (el) el.textContent = "Score: " + ns;
+        localStorage.setItem("scoring", String(ns));
+        return ns;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // item references array
   const refArr = [r1, r2, r3, r4, r5, r6];
 
   // heal amounts
-  const healAmount = [6, 8, 12, 10, 7, 9];
+  const healAmount = [10, 10, 10, 20, 20, 30];
 
   // cooldown seconds
   const generalCd = [0, 30, 10, 0, 30, 30];
@@ -190,10 +220,11 @@ function App() {
   return (
     <div id="app">
       <div id="characterPlace">
-        <p>LIFE</p>
+        <p id="life">LIFE</p>
         <HealthBar
           onReady={(fn) => (healRef.current = fn)}
           onZero={() => {
+            localStorage.setItem("scoring", String(score));
             window.location.href = "./gameover.html";
           }}
         />

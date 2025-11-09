@@ -1,25 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Coral+Pixels&family=Doto:wght@100..900&family=Foldit:wght@100..900&family=Freckle+Face&family=Gamja+Flower&family=Handjet:wght@100..900&family=Jersey+10&family=Love+Ya+Like+A+Sister&family=Micro+5+Charted&family=Moo+Lah+Lah&family=Rubik+Pixels&family=Schoolbell&family=Silkscreen:wght@400;700&family=Story+Script&family=Wallpoet&display=swap");
+
 html,
 body {
   height: 100%;
   margin: 0;
 }
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #111;
-  color: #fff;
-  font-family: sans-serif;
+  background: #ffffff;
 }
-.card {
-  background: #fff;
-  color: #111;
+
+h2 {
+  margin: auto;
+  font-family: "Silkscreen";
+  /* font-size: 35px; */
+}
+
+p {
+  margin: 12px;
+  font-family: "Jersey 10";
+  font-size: 25px;
+}
+
+img {
+  width: 300px;
+  height: auto;
+}
+
+.scoreDisplay {
+  background: #9963d8;
+  color: #3c10b5;
   padding: 20px 24px;
   border-radius: 8px;
   text-align: center;
   min-width: 240px;
 }
+
 button {
-  padding: 8px 12px;
+  padding: 10;
   cursor: pointer;
+  background: #eb23ca;
+  color: #3c10b5;
+  font-family: "Jersey 10";
+  font-size: 20px;
 }

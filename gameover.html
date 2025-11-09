@@ -6,9 +6,20 @@
     <link rel="stylesheet" href="source/gameoverStyle.css" />
   </head>
   <body>
-    <div class="card">
-      <h2 style="margin: 0 0 12px">Game Over</h2>
-      <button onclick="window.location.href='index.html'">Replay</button>
-    </div>
+    <body>
+      <div>
+        <img src="img/character.png" alt="character" class="character" />
+        <div class="scoreDisplay">
+          <h2>Game Over</h2>
+          <p id="finalScore">Score: 0</p>
+          <button onclick="window.location.href='index.html'">Replay</button>
+        </div>
+      </div>
+
+      <script>
+        const scoreElement = document.getElementById("finalScore");
+        scoreElement.textContent = "Score: " + localStorage.getItem("scoring");
+      </script>
+    </body>
   </body>
 </html>
