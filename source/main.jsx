@@ -34,14 +34,14 @@ function HealthBar({
       step = 0;
     let rate = (start * (1000 / tick)) / 100;
     const loop = (now) => {
-      const dt = (now - last) / 1000;
+      const health = (now - last) / 1000;
       const wantStep = Math.floor((now - t0) / accelInterval);
       while (step < wantStep) {
         rate *= 1 + accelStep;
         step++;
       }
       const prev = pctRef.current,
-        next = Math.max(0, prev - rate * dt);
+        next = Math.max(0, prev - rate * health);
       if (next !== prev) {
         pctRef.current = next;
         if (bar.current) bar.current.style.transform = `scaleX(${next})`;
@@ -85,6 +85,7 @@ function App() {
   const charRef = useRef(null);
   const healRef = useRef(null);
 
+  // tracking items drag positions
   const [pos, setPos] = useState([
     { x: 0, y: 0 },
     { x: 0, y: 0 },
@@ -97,7 +98,7 @@ function App() {
   // cooldowns
   const [coolUntil, setCoolUntil] = useState([0, 0, 0, 0, 0, 0]);
   const usesRef = useRef([[], [], [], [], [], []]);
-  const energyPenaltyUntil = useRef(0);
+  const waitUntil = useRef(0);
 
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -105,6 +106,7 @@ function App() {
     return () => clearInterval(t);
   }, []);
 
+  //scoring system
   useEffect(() => {
     const el = document.getElementById("score");
     const id = setInterval(() => {
@@ -179,6 +181,7 @@ function App() {
     if (isCooling(i)) return;
     if (!hitCharacter(i)) return;
 
+    // change character animation
     {
       const s = refArr[i].current?.querySelector("img")?.src;
       if (s && charRef.current) {
@@ -200,7 +203,7 @@ function App() {
 
     // for energy drink
     if (i === 3) {
-      if (nowMs < energyPenaltyUntil.current) {
+      if (nowMs < waitUntil.current) {
         if (healRef.current) healRef.current(-5);
       } else {
         if (healRef.current) healRef.current(healAmount[i] || 0);
@@ -210,7 +213,7 @@ function App() {
       pruneWindow(arr, 30000);
       arr.push(nowMs);
       if (arr.length >= 2) {
-        energyPenaltyUntil.current = nowMs + 15000;
+        waitUntil.current = nowMs + 15000;
       }
       return;
     }
