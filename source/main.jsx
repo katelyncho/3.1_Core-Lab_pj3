@@ -74,6 +74,7 @@ function HealthBar({
 
 function App() {
   const [score, setScore] = useState(0);
+  const swapTimer = useRef(null);
 
   const r1 = useRef(null),
     r2 = useRef(null),
@@ -178,6 +179,23 @@ function App() {
     if (isCooling(i)) return;
     if (!hitCharacter(i)) return;
 
+    {
+      const s = refArr[i].current?.querySelector("img")?.src;
+      if (s && charRef.current) {
+        charRef.current.src =
+          "img/" +
+          s
+            .split("/")
+            .pop()
+            .replace(/\.png$/i, ".gif");
+        if (swapTimer.current) clearTimeout(swapTimer.current);
+        swapTimer.current = setTimeout(() => {
+          charRef.current.src = "img/character.gif";
+          swapTimer.current = null;
+        }, 3000);
+      }
+    }
+
     const nowMs = Date.now();
 
     // for energy drink
@@ -232,7 +250,7 @@ function App() {
         <img
           id="characterImg"
           ref={charRef}
-          src="img/character.png"
+          src="img/character.gif"
           alt="character"
           draggable="false"
         />
